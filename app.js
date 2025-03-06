@@ -25,7 +25,7 @@ let isSubscribed = false;
 const subscribeButton = document.getElementById('subscribe-button');
 const statusDiv = document.getElementById('status');
 
-// 重要：Service Workerを先に登録してから他の処理を実行
+// Service Workerを先に登録してから他の処理を実行
 async function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     try {
@@ -36,10 +36,6 @@ async function registerServiceWorker() {
       );
       
       console.log('Service Worker registered: ', registration);
-      
-      // 重要：Firebase Messagingに登録済みのService Workerを使用させる
-      messaging.useServiceWorker(registration);
-      
       return registration;
     } catch (error) {
       console.error('Service Worker registration failed: ', error);
@@ -108,10 +104,14 @@ async function subscribeUser() {
       
       const token = await messaging.getToken({ vapidKey: VAPID_KEY });
       
-      // トークンをサーバーに送信
-      await saveTokenToServer(token);
-      isSubscribed = true;
-      updateSubscriptionUI();
+      if (token) {
+        // トークンをサーバーに送信
+        await saveTokenToServer(token);
+        isSubscribed = true;
+        updateSubscriptionUI();
+      } else {
+        throw new Error('トークンが取得できませんでした');
+      }
     } else {
       console.log('通知の許可が得られませんでした。');
       statusDiv.textContent = '通知を有効にするには、通知の許可が必要です。';
@@ -127,11 +127,13 @@ async function unsubscribeUser() {
   try {
     const token = await messaging.getToken();
     
-    // サーバーからトークンを削除
-    await deleteTokenFromServer(token);
-    
-    // FCMトークンを削除
-    await messaging.deleteToken();
+    if (token) {
+      // サーバーからトークンを削除
+      await deleteTokenFromServer(token);
+      
+      // FCMトークンを削除
+      await messaging.deleteToken();
+    }
     
     isSubscribed = false;
     updateSubscriptionUI();
@@ -211,7 +213,7 @@ messaging.onMessage((payload) => {
   };
 
   if (Notification.permission === 'granted') {
-    navigator.serviceWorker.getRegistration(`${BASE_PATH}firebase-messaging-sw.js`)
+    navigator.serviceWorker.getRegistration()
       .then(registration => {
         if (registration) {
           registration.showNotification(notificationTitle, notificationOptions);
