@@ -180,7 +180,7 @@ function saveTokenToServer(token) {
 
 // トークンをサーバーから削除する関数
 function deleteTokenFromServer(token) {
-  const gasWebAppUrl = 'YOUR_GAS_WEB_APP_URL';
+  const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbxLp0eSFU2q9SsFqpQ7RdP7byjr7ObyzgAEa62A_8yDJgJIhoZoll_WPcKOmTlXZ-PZ/exec';
   
   return fetch(gasWebAppUrl, {
     method: 'POST',
