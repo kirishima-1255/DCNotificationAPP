@@ -31,7 +31,9 @@ function initializeSubscription() {
 
   // Service Workerの登録
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/DCNotificationAPP/firebase-messaging-sw.js')
+    navigator.serviceWorker.register('/DCNotificationAPP/firebase-messaging-sw.js', {
+      scope: '/DCNotificationAPP/'
+    })
       .then(registration => {
         console.log('Service Worker registered: ', registration);
         
