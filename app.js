@@ -39,7 +39,7 @@ function initializeSubscription() {
         messaging.useServiceWorker(registration);
         
         // 現在のトークンを取得
-        messaging.getToken({ vapidKey: 'YOUR_VAPID_PUBLIC_KEY' })
+        messaging.getToken({ vapidKey: 'BFNkceGmuQGI52dOMTsknpnEzV-0wKRvqmpQbBdd08Ik-RBNVKdoDPRZJaJfdJiFUNgMPcd7tXxw-HMRCdDVTAc' })
           .then(token => {
             if (token) {
               isSubscribed = true;
