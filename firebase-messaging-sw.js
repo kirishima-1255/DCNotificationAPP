@@ -7,12 +7,13 @@ importScripts('https://www.gstatic.com/firebasejs/9.6.0/firebase-messaging-compa
 // Firebase構成オブジェクト
 // 注: これはFirebaseコンソールから取得する必要があります
 firebase.initializeApp({
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBSaIIQe9bqF6Mfh2F3vGqvKPmDPrKtQqA",
+  authDomain: "docomo-certified-notification.firebaseapp.com",
+  projectId: "docomo-certified-notification",
+  storageBucket: "docomo-certified-notification.firebasestorage.app",
+  messagingSenderId: "716682348648",
+  appId: "1:716682348648:web:ea00b080c3c6a56f5c53dd",
+  measurementId: "G-11FDW1VMX5"
 });
 
 // FCMインスタンスを取得
