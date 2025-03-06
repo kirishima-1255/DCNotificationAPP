@@ -76,7 +76,7 @@ function updateSubscriptionUI() {
 function subscribeUser() {
   Notification.requestPermission().then(permission => {
     if (permission === 'granted') {
-      messaging.getToken({ vapidKey: 'YOUR_VAPID_PUBLIC_KEY' })
+      messaging.getToken({ vapidKey: 'BFNkceGmuQGI52dOMTsknpnEzV-0wKRvqmpQbBdd08Ik-RBNVKdoDPRZJaJfdJiFUNgMPcd7tXxw-HMRCdDVTAc' })
         .then(token => {
           // トークンをサーバーに送信
           saveTokenToServer(token);
