@@ -1,6 +1,6 @@
 // アプリケーションサーバーのキー（実際には暗号化は省略するため不要ですが、
 // プッシュサービスの仕様上、何らかの値が必要です）
-const applicationServerPublicKey = 'BDHotIgZDP7MY9uYCVtQE7lnbvFhPbAa9PLAFiV0hOUmOkQ8HJcufMGK7cut12kTvp-wlN-q_GJLlB5XAgevrCw';
+const applicationServerPublicKey = 'BPLzQll6KUvG4KH78lIcqRwxoRNaO426KqHGMRibxFA780JAxsleCwmeO7_qadF-rHigItS7-X8kwslw8stZ0R4';
 
 let isSubscribed = false;
 const subscribeButton = document.getElementById('subscribe-button');
