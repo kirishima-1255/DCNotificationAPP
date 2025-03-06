@@ -111,7 +111,7 @@ function saveSubscription(subscription) {
     // ここではGoogle Apps Scriptのウェブアプリケーションとして公開したURLに送信
     const subscriptionJson = subscription.toJSON();
     
-    return fetch('YOUR_GAS_WEB_APP_URL', {
+    return fetch('https://script.google.com/macros/s/AKfycbxLp0eSFU2q9SsFqpQ7RdP7byjr7ObyzgAEa62A_8yDJgJIhoZoll_WPcKOmTlXZ-PZ/exec', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
