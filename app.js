@@ -145,7 +145,7 @@ async function unsubscribeUser() {
 // トークンをサーバーに保存する関数
 function saveTokenToServer(token) {
   // GASのWebアプリケーションURL
-  const gasWebAppUrl = 'YOUR_GAS_WEB_APP_URL';
+  const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbxLp0eSFU2q9SsFqpQ7RdP7byjr7ObyzgAEa62A_8yDJgJIhoZoll_WPcKOmTlXZ-PZ/exec';
   
   console.log('保存するトークン:', token);
   
