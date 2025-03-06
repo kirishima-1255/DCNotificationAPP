@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>在庫通知アプリ</title>
+    <title>在庫通知アプリ (FCM版)</title>
     <link rel="manifest" href="manifest.json">
     <style>
         body {
@@ -48,20 +48,11 @@
         <div id="status" class="status"></div>
     </div>
 
+    <!-- Firebase App (必須) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <!-- Firebase Messaging -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-messaging-compat.js"></script>
+
     <script src="app.js"></script>
-    <script>
-        // Service Workerの登録
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker registered: ', registration);
-                    })
-                    .catch(error => {
-                        console.log('Service Worker registration failed: ', error);
-                    });
-            });
-        }
-    </script>
 </body>
 </html>
