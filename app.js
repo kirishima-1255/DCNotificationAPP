@@ -1,25 +1,13 @@
-{
-    "name": "在庫通知アプリ",
-    "short_name": "在庫通知",
-    "start_url": "/index.html",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#4285f4",
-    "gcm_sender_id": "YOUR_SENDER_ID",
-    "icons": [
-        {
-            "src": "images/icon-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },// Firebase構成オブジェクト
+// Firebase構成オブジェクト
 // 注: これはFirebaseコンソールから取得する必要があります
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID", 
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBSaIIQe9bqF6Mfh2F3vGqvKPmDPrKtQqA",
+  authDomain: "docomo-certified-notification.firebaseapp.com",
+  projectId: "docomo-certified-notification",
+  storageBucket: "docomo-certified-notification.firebasestorage.app",
+  messagingSenderId: "716682348648",
+  appId: "1:716682348648:web:ea00b080c3c6a56f5c53dd",
+  measurementId: "G-11FDW1VMX5"
 };
 
 // Firebaseの初期化
@@ -206,10 +194,3 @@ subscribeButton.addEventListener('click', () => {
 
 // 初期化
 window.addEventListener('load', initializeSubscription);
-        {
-            "src": "images/icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
-}
