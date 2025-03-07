@@ -142,55 +142,89 @@ async function unsubscribeUser() {
   }
 }
 
-// トークンをサーバーに保存する関数
+// トークンをサーバーに保存する関数 (JSONP方式)
 async function saveTokenToServer(token) {
   // GASのWebアプリケーションURL
   const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbxLp0eSFU2q9SsFqpQ7RdP7byjr7ObyzgAEa62A_8yDJgJIhoZoll_WPcKOmTlXZ-PZ/exec';
   
   console.log('保存するトークン:', token);
   
-  try {
-    // JSONPによるクロスドメインリクエスト
-    const formData = new FormData();
-    formData.append('action', 'subscribe');
-    formData.append('token', token);
+  return new Promise((resolve, reject) => {
+    // JSONPのコールバック関数名
+    const callbackName = 'jsonpCallback_' + Math.floor(Math.random() * 1000000);
     
-    const response = await fetch(gasWebAppUrl, {
-      method: 'POST',
-      mode: 'no-cors', // CORSエラー回避のため重要
-      body: formData
-    });
+    // コールバック関数を作成
+    window[callbackName] = function(response) {
+      console.log('GASから応答を受信:', response);
+      if (response && response.success) {
+        resolve(true);
+      } else {
+        reject(new Error('サーバーからの応答に問題があります'));
+      }
+      // コールバック関数の削除
+      delete window[callbackName];
+      // スクリプトタグの削除
+      document.body.removeChild(scriptTag);
+    };
     
-    console.log('トークン保存リクエスト送信完了');
-    return true;
-  } catch (error) {
-    console.error('トークンの保存に失敗しました: ', error);
-    // エラーが発生してもUIは更新
-    return false;
-  }
+    // クエリパラメータの作成
+    const params = `?action=subscribe&token=${encodeURIComponent(token)}&callback=${callbackName}`;
+    
+    // スクリプトタグを作成して追加
+    const scriptTag = document.createElement('script');
+    scriptTag.src = gasWebAppUrl + params;
+    scriptTag.onerror = function(error) {
+      console.error('JSONPリクエストの送信に失敗しました:', error);
+      reject(error);
+      // コールバック関数とスクリプトタグを削除
+      delete window[callbackName];
+      document.body.removeChild(scriptTag);
+    };
+    
+    document.body.appendChild(scriptTag);
+    console.log('JSONPリクエストを送信しました');
+  });
 }
 
-// トークンをサーバーから削除する関数
+// トークンをサーバーから削除する関数 (JSONP方式)
 async function deleteTokenFromServer(token) {
   const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbxLp0eSFU2q9SsFqpQ7RdP7byjr7ObyzgAEa62A_8yDJgJIhoZoll_WPcKOmTlXZ-PZ/exec';
   
-  try {
-    const formData = new FormData();
-    formData.append('action', 'unsubscribe');
-    formData.append('token', token);
+  return new Promise((resolve, reject) => {
+    // JSONPのコールバック関数名
+    const callbackName = 'jsonpCallback_' + Math.floor(Math.random() * 1000000);
     
-    const response = await fetch(gasWebAppUrl, {
-      method: 'POST',
-      mode: 'no-cors', // CORSエラー回避
-      body: formData
-    });
+    // コールバック関数を作成
+    window[callbackName] = function(response) {
+      console.log('GASから応答を受信:', response);
+      if (response && response.success) {
+        resolve(true);
+      } else {
+        resolve(false); // エラーでもUIを更新するために失敗でも解決する
+      }
+      // コールバック関数の削除
+      delete window[callbackName];
+      // スクリプトタグの削除
+      document.body.removeChild(scriptTag);
+    };
     
-    console.log('トークン削除リクエスト送信完了');
-    return true;
-  } catch (error) {
-    console.error('トークンの削除リクエストに失敗しました: ', error);
-    return false;
-  }
+    // クエリパラメータの作成
+    const params = `?action=unsubscribe&token=${encodeURIComponent(token)}&callback=${callbackName}`;
+    
+    // スクリプトタグを作成して追加
+    const scriptTag = document.createElement('script');
+    scriptTag.src = gasWebAppUrl + params;
+    scriptTag.onerror = function(error) {
+      console.error('JSONPリクエストの送信に失敗しました:', error);
+      resolve(false); // エラーが発生してもUIを更新するために解決する
+      // コールバック関数とスクリプトタグを削除
+      delete window[callbackName];
+      document.body.removeChild(scriptTag);
+    };
+    
+    document.body.appendChild(scriptTag);
+    console.log('JSONPリクエストを送信しました(削除)');
+  });
 }
 
 // FCMのフォアグラウンドメッセージを処理
