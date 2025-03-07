@@ -118,4 +118,113 @@ async function subscribeUser() {
     }
   } catch (err) {
     console.error('購読処理中にエラーが発生しました:', err);
-    status
+    statusDiv.textContent = '通知の登録に失敗しました。';
+  }
+}
+
+// 購読解除処理を行う関数
+async function unsubscribeUser() {
+  try {
+    const token = await messaging.getToken();
+    
+    if (token) {
+      // サーバーからトークンを削除
+      await deleteTokenFromServer(token);
+      
+      // FCMトークンを削除
+      await messaging.deleteToken();
+    }
+    
+    isSubscribed = false;
+    updateSubscriptionUI();
+  } catch (error) {
+    console.error('トークンの削除に失敗しました', error);
+  }
+}
+
+// トークンをサーバーに保存する関数
+async function saveTokenToServer(token) {
+  // GASのWebアプリケーションURL
+  const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbxLp0eSFU2q9SsFqpQ7RdP7byjr7ObyzgAEa62A_8yDJgJIhoZoll_WPcKOmTlXZ-PZ/exec';
+  
+  console.log('保存するトークン:', token);
+  
+  try {
+    // JSONPによるクロスドメインリクエスト
+    const formData = new FormData();
+    formData.append('action', 'subscribe');
+    formData.append('token', token);
+    
+    const response = await fetch(gasWebAppUrl, {
+      method: 'POST',
+      mode: 'no-cors', // CORSエラー回避のため重要
+      body: formData
+    });
+    
+    console.log('トークン保存リクエスト送信完了');
+    return true;
+  } catch (error) {
+    console.error('トークンの保存に失敗しました: ', error);
+    // エラーが発生してもUIは更新
+    return false;
+  }
+}
+
+// トークンをサーバーから削除する関数
+async function deleteTokenFromServer(token) {
+  const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbxLp0eSFU2q9SsFqpQ7RdP7byjr7ObyzgAEa62A_8yDJgJIhoZoll_WPcKOmTlXZ-PZ/exec';
+  
+  try {
+    const formData = new FormData();
+    formData.append('action', 'unsubscribe');
+    formData.append('token', token);
+    
+    const response = await fetch(gasWebAppUrl, {
+      method: 'POST',
+      mode: 'no-cors', // CORSエラー回避
+      body: formData
+    });
+    
+    console.log('トークン削除リクエスト送信完了');
+    return true;
+  } catch (error) {
+    console.error('トークンの削除リクエストに失敗しました: ', error);
+    return false;
+  }
+}
+
+// FCMのフォアグラウンドメッセージを処理
+messaging.onMessage((payload) => {
+  console.log('Message received:', payload);
+  
+  // フォアグラウンドでの通知表示
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: `${BASE_PATH}images/icon-192x192.png`,
+    data: {
+      url: payload.data && payload.data.url ? payload.data.url : BASE_PATH
+    }
+  };
+
+  if (Notification.permission === 'granted') {
+    navigator.serviceWorker.getRegistration()
+      .then(registration => {
+        if (registration) {
+          registration.showNotification(notificationTitle, notificationOptions);
+        }
+      });
+  }
+});
+
+// クリックイベントのリスナー
+subscribeButton.addEventListener('click', () => {
+  if (isSubscribed) {
+    unsubscribeUser();
+  } else {
+    subscribeUser();
+  }
+});
+
+// 初期化
+window.addEventListener('load', initializeSubscription);
